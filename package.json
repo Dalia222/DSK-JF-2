@@ -1,0 +1,26 @@
+{
+  "name": "dsk-jf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend" : "cd frontend && npm start",
+    "backend" :"cd backend && npm start",
+    "start" : "concurrently \"npm run frontend\" \"npm run backend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farid-ramy/DSK-JF.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/farid-ramy/DSK-JF/issues"
+  },
+  "homepage": "https://github.com/farid-ramy/DSK-JF#readme",
+  "dependencies": {
+    "concurrently": "^8.0.1"
+  }
+}
