@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const cors = require("cors");
 require("dotenv").config();
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -13,6 +14,6 @@ app.post("/signUp/post", (req, res) => {
   res.send(req.body);
 });
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(process.env.PORT || 3001, () => {
+  console.log(`Example app listening on port ${process.env.PORT || 3001}`);
 });
