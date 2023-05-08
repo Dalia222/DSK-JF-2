@@ -20,7 +20,7 @@ const register = async (req, res) => {
       res.json("user added");
     }
   } catch (err) {
-    res.json("ERROR");
+    res.json("DataBase ERROR");
   }
 };
 

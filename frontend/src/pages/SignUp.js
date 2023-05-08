@@ -25,7 +25,7 @@ const SignUp = () => {
     <>
       <h1>Sign Up</h1>
       <p style={{ color: "red" }}>error</p>
-      <from method="POST">
+      <form method="POST" onSubmit={submit}>
         <div>
           <label htmlFor="username">Username : </label>
           <input
@@ -50,8 +50,8 @@ const SignUp = () => {
             onChange={(e) => setpassword(e.target.value)}
           />
         </div>
-        <button onClick={submit}>Submit</button>
-      </from>
+        <button>Submit</button>
+      </form>
       <br />
       <p>-- or --</p>
       <Link to="/">Log in</Link>
