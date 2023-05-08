@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
@@ -9,38 +9,57 @@ const Login = () => {
 
   const submit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post("/login", { email, password }).then((res) => {
+    const emailField = document.getElementById("emailField");
+    const passwordField = document.getElementById("passwordField");
+    const error = document.getElementById("error");
 
-      });
-    } catch (error) {
-      console.log(error);
+    if (emailField.value === "") error.innerText = "Email can't be empty";
+    else if (passwordField.value === "")
+      error.innerText = "Password can't be empty";
+
+    if (emailField.value === "" || passwordField.value === "") {
+      error.style.display = "block";
+    } else {
+      error.style.display = "hidden";
+      try {
+        await axios.post("/login", { email, password }).then((res) => {
+          if (res.data === "not exists") error.innerText = "Wrong Email";
+          else if (res.data === "wrong password")
+            error.innerText = "Wrong password";
+
+          if (res.data === "not exists" || res.data === "wrong password") {
+            error.style.display = "block";
+          } else {
+            error.style.display = "none";
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   return (
     <>
       <h1>Log in</h1>
-      <p style={{ color: "red", display: "none" }} id="error">
-        error
-      </p>
+      <p style={{ color: "red" }} id="error"></p>
       <form method="POST" onSubmit={submit}>
         <div>
           <input
             type="text"
             name="email"
-            id=""
+            id="emailField"
             placeholder=" Email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.trim())}
           />
         </div>
         <div>
           <input
             type="text"
             name="password"
-            id=""
+            id="passwordField"
             placeholder=" Password"
-            onChange={(e) => setpassword(e.target.value)}
+            onChange={(e) => setpassword(e.target.value.trim())}
           />
         </div>
         <button>Login</button>
