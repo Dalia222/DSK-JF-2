@@ -20,7 +20,7 @@ const register = async (req, res) => {
       res.json("user added");
     }
   } catch (err) {
-    res.json("ERROR");
+    res.json("DataBase ERROR");
   }
 };
 
@@ -29,7 +29,8 @@ const login = async (req, res) => {
   try {
     const check = await userModel.findOne({ email }); //if found return the object if not return null
     if (check) {
-      res.json("exists");
+      if (password === check.password) res.json("logged in successfully");
+      else res.json("wrong password");
     } else {
       res.json("not exists");
     }
