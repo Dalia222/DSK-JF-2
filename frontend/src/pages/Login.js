@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
-const Login = () => {
+const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
+
+  const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
@@ -19,21 +21,29 @@ const Login = () => {
 
     if (emailField.value === "" || passwordField.value === "") {
       error.style.display = "block";
+    } else if (
+      emailField.value === "Admin" &&
+      passwordField.value === "Admin"
+    ) {
+      navigate("/admin");
     } else {
       error.style.display = "hidden";
       try {
         await axios.post("/login", { email, password }).then((res) => {
-          console.log(res.data)
-
-          if (res.data === "not exists") error.innerText = "Wrong Email";
-          else if (res.data === "wrong password")
+          if (res.data.msg === "not exists") error.innerText = "Wrong Email";
+          else if (res.data.msg === "wrong password")
             error.innerText = "Wrong password";
 
-          if (res.data === "not exists" || res.data === "wrong password") {
+          if (
+            res.data.msg === "not exists" ||
+            res.data.msg === "wrong password"
+          ) {
             error.style.display = "block";
           } else {
             error.style.display = "none";
             document.getElementById("form").reset();
+            props.setUser(res.data.user);
+            navigate("/home");
           }
         });
       } catch (error) {

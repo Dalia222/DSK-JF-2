@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
-const SignUp = () => {
+const SignUp = (props) => {
   const [username, setUsername] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+
+  const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
@@ -34,15 +36,17 @@ const SignUp = () => {
         await axios
           .post("/register", { username, email, password })
           .then((res) => {
-            if (res.data === "username is Taken") {
+            if (res.data.msg === "username is Taken") {
               errors.innerHTML = `${res.data}`;
               errors.style.display = "block";
-            } else if (res.data === "Email is Taken") {
+            } else if (res.data.msg === "Email is Taken") {
               errors.innerHTML = `${res.data}`;
               errors.style.display = "block";
             } else {
               errors.style.display = "none";
               document.getElementById("form").reset();
+              props.setUser(res.data.user);
+              navigate("/home");
             }
           });
       } catch (error) {
