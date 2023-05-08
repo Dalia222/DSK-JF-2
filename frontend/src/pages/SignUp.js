@@ -1,20 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const SignUp = () => {
+  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios
+        .post("/register", { username, email, password })
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <h1>Sign Up</h1>
-      <from action="/signUp/post" method="post">
+      <p style={{ color: "red" }}>error</p>
+      <from method="POST">
+        <div>
+          <label htmlFor="username">Username : </label>
+          <input
+            type="text"
+            id="username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
         <div>
           <label htmlFor="email">Email : </label>
-          <input type="text" id="email" />
+          <input
+            type="text"
+            id="email"
+            onChange={(e) => setemail(e.target.value)}
+          />
         </div>
         <div>
           <label htmlFor="password">Password : </label>
-          <input type="text" id="password" />
+          <input
+            type="text"
+            id="password"
+            onChange={(e) => setpassword(e.target.value)}
+          />
         </div>
-        <button>Submit</button>
+        <button onClick={submit}>Submit</button>
       </from>
+      <br />
+      <p>-- or --</p>
+      <Link to="/">Log in</Link>
     </>
   );
 };
