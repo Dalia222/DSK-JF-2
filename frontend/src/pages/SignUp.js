@@ -37,10 +37,10 @@ const SignUp = (props) => {
           .post("/register", { username, email, password })
           .then((res) => {
             if (res.data.msg === "username is Taken") {
-              errors.innerHTML = `${res.data}`;
+              errors.innerHTML = `${res.data.msg}`;
               errors.style.display = "block";
             } else if (res.data.msg === "Email is Taken") {
-              errors.innerHTML = `${res.data}`;
+              errors.innerHTML = `${res.data.msg}`;
               errors.style.display = "block";
             } else {
               errors.style.display = "none";
