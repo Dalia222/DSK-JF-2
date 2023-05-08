@@ -42,6 +42,7 @@ const SignUp = () => {
               errors.style.display = "block";
             } else {
               errors.style.display = "none";
+              document.getElementById("form").reset();
             }
           });
       } catch (error) {
@@ -54,7 +55,7 @@ const SignUp = () => {
     <>
       <h1>Sign Up</h1>
       <p style={{ color: "red" }}></p>
-      <form method="POST">
+      <form method="POST" id="form">
         <div>
           <label htmlFor="username">Username : </label>
           <input
@@ -88,4 +89,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUp;

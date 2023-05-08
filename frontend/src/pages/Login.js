@@ -23,6 +23,8 @@ const Login = () => {
       error.style.display = "hidden";
       try {
         await axios.post("/login", { email, password }).then((res) => {
+          console.log(res.data)
+
           if (res.data === "not exists") error.innerText = "Wrong Email";
           else if (res.data === "wrong password")
             error.innerText = "Wrong password";
@@ -31,6 +33,7 @@ const Login = () => {
             error.style.display = "block";
           } else {
             error.style.display = "none";
+            document.getElementById("form").reset();
           }
         });
       } catch (error) {
@@ -43,7 +46,7 @@ const Login = () => {
     <>
       <h1>Log in</h1>
       <p style={{ color: "red" }} id="error"></p>
-      <form method="POST" onSubmit={submit}>
+      <form method="POST" onSubmit={submit} id="form">
         <div>
           <input
             type="text"

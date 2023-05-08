@@ -11,10 +11,14 @@ const register = async (req, res) => {
     } else if (checkUsername) {
       res.json("username is Taken");
     } else {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      console.log(hashedPassword);
+
       const newUser = new userModel({
         username,
         email,
-        password,
+        password: hashedPassword,
       });
       newUser.save();
       res.json("user added");
@@ -29,8 +33,10 @@ const login = async (req, res) => {
   try {
     const check = await userModel.findOne({ email }); //if found return the object if not return null
     if (check) {
-      if (password === check.password) res.json("logged in successfully");
-      else res.json("wrong password");
+      if (await bcrypt.compare(password,check.password)) 
+        res.json("logged in successfully");
+      else 
+        res.json("wrong password");
     } else {
       res.json("not exists");
     }
