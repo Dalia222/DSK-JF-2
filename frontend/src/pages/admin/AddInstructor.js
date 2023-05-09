@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import formValidation from "../../helper/formValidation"
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const AddInstructor = (props) => {
@@ -12,23 +13,14 @@ const AddInstructor = (props) => {
 
   const submit = async (e) => {
     e.preventDefault();
-
+    //check if all fields are not empty
     const form = document.querySelector("form");
     const error = document.getElementById("error");
-
-    for (let input of Array.from(form.elements)) {
-      if (input.value === "") {
-        let text = input.name.trim();
-        text = text.charAt(0).toUpperCase() + text.slice(1);
-        for (let i = 1; i < text.length; i++) {
-          if (text[i] === text[i].toUpperCase()) {
-            text = text.substring(0, i) + " " + text.substring(i, text.length);
-            error.innerHTML = text + " is required";
-            break;
-          }
-        }
-      }
-    }
+    if (formValidation(form)) {
+      error.innerHTML = formValidation(form);
+      return;
+    } else error.innerHTML = "";
+    
   };
 
   return (

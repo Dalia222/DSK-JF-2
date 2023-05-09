@@ -51,7 +51,7 @@ const SignUp = (props) => {
             type="text"
             id="usernameField"
             name="username"
-            onChange={(e) => setUsername(e.target.value.trim())}
+            onChange={(e) => setUsername(e.target.value.trim())}//                 <--- check username on change in database
           />
         </div>
         <div>
@@ -60,7 +60,7 @@ const SignUp = (props) => {
             type="text"
             id="emailField"
             name="email"
-            onChange={(e) => setEmail(e.target.value.trim())}
+            onChange={(e) => setEmail(e.target.value.trim())}//                 <--- check email on change in database
           />
         </div>
         <div>

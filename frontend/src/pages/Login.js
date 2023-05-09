@@ -37,7 +37,7 @@ const Login = (props) => {
           error.innerText = "Wrong Email";
         else if (res.data.msg === "Wrong password")
           error.innerText = "Wrong Password";
-        else error.innerText = "Error"; //                                                      <---redirect to a check connection page
+        else error.innerText = "Error";//                                                      <---redirect to a check connection page
       });
     } catch (error) {
       console.log(error);
