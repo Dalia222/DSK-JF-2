@@ -31,7 +31,8 @@ const Login = (props) => {
       await axios.post("/login", { email, password }).then((res) => {
         if (res.data.msg === "Logged in successfully") {
           document.getElementById("form").reset();
-          props.setUser(res.data.user); //                                                     <--- make it more professional
+          //props.setUser(res.data.user); //                                                     <--- make it more professional
+          console.log("logged in")
           navigate("/home");
         } else if (res.data.msg === "Not exist")
           error.innerText = "Wrong Email";

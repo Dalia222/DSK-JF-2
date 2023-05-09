@@ -27,13 +27,14 @@ const SignUp = (props) => {
         .then((res) => {
           if (res.data.msg === "User added") {
             document.getElementById("form").reset();
-            props.setUser(res.data.user);//                                               <--- make it more professional
+            // props.setUser(res.data.user);//                                               <--- make it more professional
+            console.log("logged in")
             navigate("/home");
           } else if (res.data.msg === "Username is Taken")
             error.innerHTML = `${res.data.msg}`;
           else if (res.data.msg === "Email is Taken")
             error.innerHTML = `${res.data.msg}`;
-          else error.innerHTML = "Error";//                                                      <---redirect to a check connection page
+          else error.innerHTML = "Error"; //                                                      <---redirect to a check connection page
         });
     } catch (error) {
       console.log(error);
@@ -51,7 +52,7 @@ const SignUp = (props) => {
             type="text"
             id="usernameField"
             name="username"
-            onChange={(e) => setUsername(e.target.value.trim())}//                 <--- check username on change in database
+            onChange={(e) => setUsername(e.target.value.trim())} //                 <--- check username on change in database
           />
         </div>
         <div>
@@ -60,7 +61,7 @@ const SignUp = (props) => {
             type="text"
             id="emailField"
             name="email"
-            onChange={(e) => setEmail(e.target.value.trim())}//                 <--- check email on change in database
+            onChange={(e) => setEmail(e.target.value.trim())} //                 <--- check email on change in database
           />
         </div>
         <div>

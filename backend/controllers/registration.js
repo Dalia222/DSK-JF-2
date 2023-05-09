@@ -24,20 +24,39 @@ const register = async (req, res) => {
       res.send({ user: newStudent, msg: "User added" });
     }
   } catch (err) {
-    res.json({msg:"DATABASE ERROR"});
+    res.json({ msg: "DATABASE ERROR" });
   }
 };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const check = await studentModel.findOne({ email }); //if found return the object if not return null
-    if (check) {
-      if (await bcrypt.compare(password, check.password))
-        res.send({ user: check, msg: "Logged in successfully" });
+    const checkAsStudent = await studentModel.findOne({ email }); //if found return the object if not return null
+    const checkAsInstructor = await instructorModel.findOne({ email }); //if found return the object if not return null
+    // console.log(checkAsStudent);
+    // console.log(checkAsInstructor);
+
+    if (checkAsStudent) {
+      if (await bcrypt.compare(password, checkAsStudent.password))
+        res.send({
+          user: checkAsStudent,
+          msg: "Logged in successfully",
+          student: true,
+        });
       else res.send({ msg: "Wrong password" });
     } else {
-      res.send({ msg: "Not exist" });
+      if (checkAsInstructor) {
+        console.log("xxxxxxxxxxxxxxxx");
+        if (await bcrypt.compare(password, checkAsInstructor.password))
+          res.send({
+            user: checkAsInstructor,
+            msg: "Logged in successfully",
+            student: false,
+          });
+        else res.send({ msg: "Wrong password" });
+      } else {
+        res.send({ msg: "Not exist" });
+      }
     }
   } catch (err) {
     res.json("DATABASE ERROR");
