@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(registrationRouter);
-app.use("/admin",adminRouter);
+app.use("/admin/add",adminRouter);
 
 
 mongoose.set("strictQuery", true);

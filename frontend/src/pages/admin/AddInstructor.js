@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import formValidation from "../../helper/formValidation"
+import formValidation from "../../helper/formValidation";
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const AddInstructor = (props) => {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +20,22 @@ const AddInstructor = (props) => {
       error.innerHTML = formValidation(form);
       return;
     } else error.innerHTML = "";
-    
+    //check about the user information
+    try {
+      await axios
+        .post("/admin/add/instructor", { firstName, lastName, username, email, password })
+        .then((res) => {
+          if (res.data.msg === "User added") {
+            document.getElementById("form").reset();
+          } else if (res.data.msg === "Username is Taken")
+            error.innerHTML = `${res.data.msg}`;
+          else if (res.data.msg === "Email is Taken")
+            error.innerHTML = `${res.data.msg}`;
+          else error.innerHTML = "Error"; //                                                      <---redirect to a check connection page
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -33,7 +48,7 @@ const AddInstructor = (props) => {
             type="text"
             id="firstNameField"
             name="firstName"
-            onChange={(e) => setFirstname(e.target.value.trim())}
+            onChange={(e) => setFirstName(e.target.value.trim())}
           />
         </div>
         <div>
@@ -42,7 +57,7 @@ const AddInstructor = (props) => {
             type="text"
             id="lastNameField"
             name="lastName"
-            onChange={(e) => setLastname(e.target.value.trim())}
+            onChange={(e) => setLastName(e.target.value.trim())}
           />
         </div>
         <div>

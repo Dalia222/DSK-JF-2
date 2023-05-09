@@ -1,13 +1,42 @@
-const express = require("express");
+const studentModel = require("../models/student");
+const instructorModel = require("../models/instructor");
+const bcrypt = require("bcrypt");
 
-const student = async (req, res)=>{
-    
-}
-const instructor = async (req, res)=>{
-    console.log(req.body)
-}
-const course = async (req, res)=>{
+const student = async (req, res) => {};
 
-}
+const instructor = async (req, res) => {
+  const { firstName, lastName, username, email, password } = req.body;
+  try {
+    const checkEmailFromStudent = await studentModel.findOne({ email }); //if found return the object if not return null
+    const checkUsernameFromStudent = await studentModel.findOne({ username }); //if found return the object if not return null
 
-module.exports = {student , instructor,course};
+    const checkEmailFromInstructor = await instructorModel.findOne({ email }); //if found return the object if not return null
+    const checkUsernameFromInstructor = await instructorModel.findOne({
+      username
+    }); //if found return the object if not return null
+
+    if (checkEmailFromStudent || checkEmailFromInstructor) {
+      res.send({ msg: "Email is Taken" });
+    } else if (checkUsernameFromStudent || checkUsernameFromInstructor) {
+      res.send({ msg: "Username is Taken" });
+    } else {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const newInstructor = new instructorModel({
+        firstName,
+        lastName,
+        username,
+        email,
+        password: hashedPassword,
+      });
+      newInstructor.save();
+      res.send({ user: newInstructor, msg: "User added" });
+    }
+  } catch (err) {
+    res.json({ msg: "DATABASE ERROR" });
+  }
+};
+
+const course = async (req, res) => {};
+
+module.exports = { student, instructor, course };
