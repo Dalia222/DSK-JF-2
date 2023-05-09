@@ -1,79 +1,66 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import formValidation from "../helper/formValidation";
 import axios from "axios";
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const SignUp = (props) => {
   const [username, setUsername] = useState("");
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
-    let errors = document.querySelector("p");
-    const usernameField = document.getElementById("usernameField");
-    const emailField = document.getElementById("emailField");
-    const passwordField = document.getElementById("passwordField");
-
-    if (usernameField.value === "") {
-      errors.innerHTML = "Username can't be empty";
-    } else if (emailField.value === "") {
-      errors.innerHTML = "Email can't be empty";
-    } else if (passwordField.value === "") {
-      errors.innerHTML = "Password can't be empty";
-    }
-    if (
-      usernameField.value === "" ||
-      emailField.value === "" ||
-      passwordField.value === ""
-    ) {
-      errors.style.display = "block";
-    } else {
-      errors.style.display = "none";
-      try {
-        await axios
-          .post("/register", { username, email, password })
-          .then((res) => {
-            if (res.data.msg === "username is Taken") {
-              errors.innerHTML = `${res.data.msg}`;
-              errors.style.display = "block";
-            } else if (res.data.msg === "Email is Taken") {
-              errors.innerHTML = `${res.data.msg}`;
-              errors.style.display = "block";
-            } else {
-              errors.style.display = "none";
-              document.getElementById("form").reset();
-              props.setUser(res.data.user);
-              navigate("/home");
-            }
-          });
-      } catch (error) {
-        console.log(error);
-      }
+    //check if all fields are not empty
+    const form = document.querySelector("form");
+    const error = document.getElementById("error");
+    if (formValidation(form)) {
+      error.innerHTML = formValidation(form);
+      return;
+    } else error.innerHTML = "";
+    //check about the user information
+    try {
+      await axios
+        .post("/register", { username, email, password })
+        .then((res) => {
+          if (res.data.msg === "User added") {
+            document.getElementById("form").reset();
+            props.setUser(res.data.user);//                                               <--- make it more professional
+            navigate("/home");
+          } else if (res.data.msg === "Username is Taken")
+            error.innerHTML = `${res.data.msg}`;
+          else if (res.data.msg === "Email is Taken")
+            error.innerHTML = `${res.data.msg}`;
+          else error.innerHTML = "Error";//                                                      <---redirect to a check connection page
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <>
       <h1>Sign Up</h1>
-      <p style={{ color: "red" }}></p>
+      <p style={{ color: "red" }} id="error"></p>
       <form method="POST" id="form">
         <div>
-          <label htmlFor="username">Username : </label>
+          <label htmlFor="usernameField">Username : </label>
           <input
             type="text"
             id="usernameField"
+            name="username"
             onChange={(e) => setUsername(e.target.value.trim())}
           />
         </div>
         <div>
-          <label htmlFor="email">Email : </label>
+          <label htmlFor="emailField">Email : </label>
           <input
             type="text"
             id="emailField"
-            onChange={(e) => setemail(e.target.value.trim())}
+            name="email"
+            onChange={(e) => setEmail(e.target.value.trim())}
           />
         </div>
         <div>
@@ -81,7 +68,8 @@ const SignUp = (props) => {
           <input
             type="text"
             id="passwordField"
-            onChange={(e) => setpassword(e.target.value.trim())}
+            name="password"
+            onChange={(e) => setPassword(e.target.value.trim())}
           />
         </div>
         <button onClick={submit}>Submit</button>

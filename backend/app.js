@@ -3,7 +3,8 @@ const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const registrationRouter = require("./routers/registration")
+const registrationRouter = require("./routers/registration") ;
+const adminRouter = require("./routers/admin");
 require("dotenv").config();
 
 app.use(cors());
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(registrationRouter);
+app.use("/admin",adminRouter);
 
 
 mongoose.set("strictQuery", true);

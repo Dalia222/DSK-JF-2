@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import formValidation from "../helper/formValidation";
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const Login = (props) => {
@@ -11,44 +12,35 @@ const Login = (props) => {
 
   const submit = async (e) => {
     e.preventDefault();
-    const emailField = document.getElementById("emailField");
-    const passwordField = document.getElementById("passwordField");
+
+    //check if all fields are not empty
+    const form = document.querySelector("form");
     const error = document.getElementById("error");
-
-    if (emailField.value === "") error.innerText = "Email can't be empty";
-    else if (passwordField.value === "")
-      error.innerText = "Password can't be empty";
-
-    if (emailField.value === "" || passwordField.value === "") {
-      error.style.display = "block";
-    } else if (
-      emailField.value === "Admin" &&
-      passwordField.value === "Admin"
-    ) {
+    if (formValidation(form)) {
+      error.innerHTML = formValidation(form);
+      return;
+    } else error.innerHTML = "";
+    //check if the user is the admin
+    if (
+      document.getElementById("emailField").value === "Admin" &&
+      document.getElementById("passwordField").value === "Admin"
+    )
       navigate("/admin");
-    } else {
-      error.style.display = "hidden";
-      try {
-        await axios.post("/login", { email, password }).then((res) => {
-          if (res.data.msg === "not exists") error.innerText = "Wrong Email";
-          else if (res.data.msg === "wrong password")
-            error.innerText = "Wrong password";
-
-          if (
-            res.data.msg === "not exists" ||
-            res.data.msg === "wrong password"
-          ) {
-            error.style.display = "block";
-          } else {
-            error.style.display = "none";
-            document.getElementById("form").reset();
-            props.setUser(res.data.user);
-            navigate("/home");
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    //check about the user information
+    try {
+      await axios.post("/login", { email, password }).then((res) => {
+        if (res.data.msg === "Logged in successfully") {
+          document.getElementById("form").reset();
+          props.setUser(res.data.user); //                                                     <--- make it more professional
+          navigate("/home");
+        } else if (res.data.msg === "Not exist")
+          error.innerText = "Wrong Email";
+        else if (res.data.msg === "Wrong password")
+          error.innerText = "Wrong Password";
+        else error.innerText = "Error"; //                                                      <---redirect to a check connection page
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 

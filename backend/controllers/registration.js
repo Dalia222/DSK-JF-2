@@ -9,7 +9,7 @@ const register = async (req, res) => {
     if (checkEmail) {
       res.send({ msg: "Email is Taken" });
     } else if (checkUsername) {
-      res.send({ msg: "username is Taken" });
+      res.send({ msg: "Username is Taken" });
     } else {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -21,10 +21,10 @@ const register = async (req, res) => {
         password: hashedPassword,
       });
       newUser.save();
-      res.send({ user: newUser, msg: "user added" });
+      res.send({ user: newUser, msg: "User added" });
     }
   } catch (err) {
-    res.json("DataBase ERROR");
+    res.json({msg:"DATABASE ERROR"});
   }
 };
 
@@ -34,13 +34,13 @@ const login = async (req, res) => {
     const check = await userModel.findOne({ email }); //if found return the object if not return null
     if (check) {
       if (await bcrypt.compare(password, check.password))
-        res.send({ user: check, msg: "logged in successfully" });
-      else res.send({ msg: "wrong password" });
+        res.send({ user: check, msg: "Logged in successfully" });
+      else res.send({ msg: "Wrong password" });
     } else {
-      res.send({ msg: "not exists" });
+      res.send({ msg: "Not exist" });
     }
   } catch (err) {
-    res.json("not exists");
+    res.json("DATABASE ERROR");
   }
 };
 
