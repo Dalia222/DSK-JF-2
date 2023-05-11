@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import formValidation from "../../helper/formValidation";
+
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const AddStudent = () => {
@@ -8,43 +9,49 @@ const AddStudent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //check if all fields are not empty
+    // Check if all fields are not empty
     const form = document.querySelector("form");
     const error = document.getElementById("error");
+
     if (formValidation(form)) {
       error.innerHTML = formValidation(form);
       return;
-    } else error.innerHTML = "";
+    } else {
+      error.innerHTML = "";
+    }
 
-    //check about the user information
+    // Check student information
     try {
-      await axios
-        .post("/admin/add/student", { username, email, password })
-        .then((res) => {
-          if (res.data.msg === "Student added") {
-            document.getElementById("form").reset();
-          } else if (res.data.msg === "Username is Taken")
-            error.innerHTML = `${res.data.msg}`;
-          else if (res.data.msg === "Email is Taken")
-            error.innerHTML = `${res.data.msg}`;
-          else error.innerHTML = "Error"; //                                                      <---redirect to a check connection page
-        });
+      const response = await axios.post("/admin/add/student", {
+        username,
+        email,
+        password,
+      });
+
+      if (response.data.msg === "Student added") {
+        document.getElementById("form").reset();
+      } else if (response.data.msg === "Username is Taken") {
+        error.innerHTML = response.data.msg;
+      } else if (response.data.msg === "Email is Taken") {
+        error.innerHTML = response.data.msg;
+      } else {
+        error.innerHTML = "Error"; // Redirect to a check connection page
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <>
-      <h1>Add Student Page</h1> 
+    <main>
+      <h1>Add Student Page</h1>
       <p id="error" style={{ color: "red" }}></p>
-      <form method="POST" id="form" onSubmit={submit}>
-
+      <form onSubmit={handleSubmit} id="form">
         <div>
-          <label htmlFor="usernameField">Username : </label>
+          <label htmlFor="usernameField">Username:</label>
           <input
             type="text"
             id="usernameField"
@@ -54,7 +61,7 @@ const AddStudent = () => {
         </div>
 
         <div>
-          <label htmlFor="emailField">Email : </label>
+          <label htmlFor="emailField">Email:</label>
           <input
             type="text"
             id="emailField"
@@ -64,19 +71,18 @@ const AddStudent = () => {
         </div>
 
         <div>
-          <label htmlFor="passwordField">Password : </label>
+          <label htmlFor="passwordField">Password:</label>
           <input
-            type="text"
+            type="password"
             id="passwordField"
             name="password"
             onChange={(e) => setPassword(e.target.value.trim())}
           />
         </div>
 
-        <button>Submit</button>
-
+        <button type="submit">Submit</button>
       </form>
-    </>
+    </main>
   );
 };
 

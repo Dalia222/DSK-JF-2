@@ -40,7 +40,6 @@ function passwordValidation(input) {
 }
 
 const formValidation = (form) => {
-  return  false;
   let errorMessage;
   let pwd;
   for (let input of Array.from(form.elements)) {

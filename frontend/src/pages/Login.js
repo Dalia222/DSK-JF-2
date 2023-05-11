@@ -1,83 +1,85 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import formValidation from "../helper/formValidation";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
-const Login = (props) => {
+const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setpassword] = useState("");
+  const [password, setPassword] = useState("");
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //check if all fields are not empty
+    // Check if all fields are not empty
     const form = document.querySelector("form");
     const error = document.getElementById("error");
+
     if (formValidation(form)) {
       error.innerHTML = formValidation(form);
       return;
-    } else error.innerHTML = "";
+    } else {
+      error.innerHTML = "";
+    }
 
-    //check if the user is the admin  
-    // if (
-    //   document.getElementById("emailField").value === "Admin" &&
-    //   document.getElementById("passwordField").value === "Admin"
-    // )
+    // Check if the user is the admin
+    if (email.toLowerCase() === "admin" && password === "Admin") {
+      // Perform admin login actions
+      // ...
+    } else {
+      try {
+        const response = await axios.post("/login", { email, password });
+        const token = response.data.token;
+        Cookies.set("token", token, { expires: 1 });
 
-    //check about the user information
-
-    try {
-      await axios.post("/login", { email, password }).then((res) => {
-        const token = res.data.token;
-        Cookies.set('token', token, { expires: 1 });
-        if (res.data.msg === "Logged in successfully") {
+        if (response.data.msg === "Logged in successfully") {
           document.getElementById("form").reset();
-        } else if (res.data.msg === "Not exist")
+        } else if (response.data.msg === "Not exist") {
           error.innerText = "Wrong Email";
-        else if (res.data.msg === "Wrong password")
+        } else if (response.data.msg === "Wrong password") {
           error.innerText = "Wrong Password";
-        else error.innerText = "Error";
-      });
-    } catch (error) {
-      console.log(error);
+        } else {
+          error.innerText = "Error";
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   return (
-    <>
+    <main>
       <h1>Log in</h1>
       <p style={{ color: "red" }} id="error"></p>
-      <form method="POST" onSubmit={submit} id="form">
-
+      <form onSubmit={handleSubmit} id="form">
         <div>
           <input
             type="text"
             name="email"
             id="emailField"
-            placeholder=" Email"
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value.toLowerCase().trim())}
           />
         </div>
 
         <div>
           <input
-            type="text"
+            type="password"
             name="password"
             id="passwordField"
-            placeholder=" Password"
-            onChange={(e) => setpassword(e.target.value.trim())}
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value.trim())}
           />
         </div>
 
-        <button onClick={()=>submit}>Login</button>
-        
+        <button type="submit">Login</button>
       </form>
       <br />
       <p>-- or --</p>
       <Link to="/signup">Sign Up</Link>
-    </>
+    </main>
   );
 };
 
