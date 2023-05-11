@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import formValidation from "../helper/formValidation";
+import Cookies from 'js-cookie';
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
 const Login = (props) => {
@@ -20,14 +21,17 @@ const Login = (props) => {
     } else error.innerHTML = "";
 
     //check if the user is the admin  
-    if (
-      document.getElementById("emailField").value === "Admin" &&
-      document.getElementById("passwordField").value === "Admin"
-    )
+    // if (
+    //   document.getElementById("emailField").value === "Admin" &&
+    //   document.getElementById("passwordField").value === "Admin"
+    // )
 
     //check about the user information
+
     try {
       await axios.post("/login", { email, password }).then((res) => {
+        const token = res.data.token;
+        Cookies.set('token', token, { expires: 1 });
         if (res.data.msg === "Logged in successfully") {
           document.getElementById("form").reset();
         } else if (res.data.msg === "Not exist")
@@ -67,7 +71,7 @@ const Login = (props) => {
           />
         </div>
 
-        <button>Login</button>
+        <button onClick={()=>submit}>Login</button>
         
       </form>
       <br />
