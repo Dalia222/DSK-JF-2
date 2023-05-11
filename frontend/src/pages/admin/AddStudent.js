@@ -10,6 +10,7 @@ const AddStudent = () => {
 
   const submit = async (e) => {
     e.preventDefault();
+
     //check if all fields are not empty
     const form = document.querySelector("form");
     const error = document.getElementById("error");
@@ -18,6 +19,7 @@ const AddStudent = () => {
       return;
     } else error.innerHTML = "";
 
+    //check about the user information
     try {
       await axios
         .post("/admin/add/student", { username, email, password })
@@ -37,28 +39,30 @@ const AddStudent = () => {
 
   return (
     <>
-      <h1>Add Student Page</h1>
-
+      <h1>Add Student Page</h1> 
       <p id="error" style={{ color: "red" }}></p>
       <form method="POST" id="form" onSubmit={submit}>
+
         <div>
           <label htmlFor="usernameField">Username : </label>
           <input
             type="text"
             id="usernameField"
             name="username"
-            onChange={(e) => setUsername(e.target.value.trim())}
+            onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <label htmlFor="emailField">Email : </label>
           <input
             type="text"
             id="emailField"
             name="email"
-            onChange={(e) => setEmail(e.target.value.trim())}
+            onChange={(e) => setEmail(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <label htmlFor="passwordField">Password : </label>
           <input
@@ -68,7 +72,9 @@ const AddStudent = () => {
             onChange={(e) => setPassword(e.target.value.trim())}
           />
         </div>
+
         <button>Submit</button>
+
       </form>
     </>
   );

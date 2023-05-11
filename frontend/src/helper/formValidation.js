@@ -40,6 +40,7 @@ function passwordValidation(input) {
 }
 
 const formValidation = (form) => {
+  return ""; // shut down function 
   let errorMessage;
   let pwd;
   for (let input of Array.from(form.elements)) {
@@ -63,10 +64,8 @@ const formValidation = (form) => {
       pwd = input.value;
       if (errorMessage) return errorMessage;
     }
-    console.log("password   ", pwd);
     if (input.name === "confirmPassword") {
       let cPwd =  input.value;
-      console.log("cPassword   ", cPwd);
       return pwd === cPwd ? "" : "Passwords are not the same";
     }
   }

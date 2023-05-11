@@ -13,6 +13,7 @@ const AddInstructor = (props) => {
 
   const submit = async (e) => {
     e.preventDefault();
+
     //check if all fields are not empty
     const form = document.querySelector("form");
     const error = document.getElementById("error");
@@ -20,12 +21,13 @@ const AddInstructor = (props) => {
       error.innerHTML = formValidation(form);
       return;
     } else error.innerHTML = "";
+
     //check about the user information
     try {
       await axios
         .post("/admin/add/instructor", { firstName, lastName, username, email, password })
         .then((res) => {
-          if (res.data.msg === "User added") {
+          if (res.data.msg === "Instructor added") {
             document.getElementById("form").reset();
           } else if (res.data.msg === "Username is Taken")
             error.innerHTML = `${res.data.msg}`;
@@ -42,42 +44,47 @@ const AddInstructor = (props) => {
     <>
       <p id="error" style={{ color: "red" }}></p>
       <form method="POST" id="form" onSubmit={submit}>
+
         <div>
           <label htmlFor="firstnameField">First Name : </label>
           <input
             type="text"
             id="firstNameField"
             name="firstName"
-            onChange={(e) => setFirstName(e.target.value.trim())}
+            onChange={(e) => setFirstName(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <label htmlFor="lastnameField">Last Name : </label>
           <input
             type="text"
             id="lastNameField"
             name="lastName"
-            onChange={(e) => setLastName(e.target.value.trim())}
+            onChange={(e) => setLastName(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <label htmlFor="usernameField">Username : </label>
           <input
             type="text"
             id="usernameField"
             name="username"
-            onChange={(e) => setUsername(e.target.value.trim())}
+            onChange={(e) => setUsername(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <label htmlFor="emailField">Email : </label>
           <input
             type="text"
             id="emailField"
             name="email"
-            onChange={(e) => setEmail(e.target.value.trim())}
+            onChange={(e) => setEmail(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <label htmlFor="passwordField">Password : </label>
           <input
@@ -87,7 +94,9 @@ const AddInstructor = (props) => {
             onChange={(e) => setPassword(e.target.value.trim())}
           />
         </div>
+
         <button>Submit</button>
+
       </form>
     </>
   );

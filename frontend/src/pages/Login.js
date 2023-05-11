@@ -8,8 +8,6 @@ const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
 
-  const navigate = useNavigate();
-
   const submit = async (e) => {
     e.preventDefault();
 
@@ -20,25 +18,23 @@ const Login = (props) => {
       error.innerHTML = formValidation(form);
       return;
     } else error.innerHTML = "";
-    //check if the user is the admin
+
+    //check if the user is the admin  
     if (
       document.getElementById("emailField").value === "Admin" &&
       document.getElementById("passwordField").value === "Admin"
     )
-      navigate("/admin");
+
     //check about the user information
     try {
       await axios.post("/login", { email, password }).then((res) => {
         if (res.data.msg === "Logged in successfully") {
           document.getElementById("form").reset();
-          //props.setUser(res.data.user); //                                                     <--- make it more professional
-          console.log("logged in")
-          navigate("/home");
         } else if (res.data.msg === "Not exist")
           error.innerText = "Wrong Email";
         else if (res.data.msg === "Wrong password")
           error.innerText = "Wrong Password";
-        else error.innerText = "Error";//                                                      <---redirect to a check connection page
+        else error.innerText = "Error";
       });
     } catch (error) {
       console.log(error);
@@ -50,15 +46,17 @@ const Login = (props) => {
       <h1>Log in</h1>
       <p style={{ color: "red" }} id="error"></p>
       <form method="POST" onSubmit={submit} id="form">
+
         <div>
           <input
             type="text"
             name="email"
             id="emailField"
             placeholder=" Email"
-            onChange={(e) => setEmail(e.target.value.trim())}
+            onChange={(e) => setEmail(e.target.value.toLowerCase().trim())}
           />
         </div>
+
         <div>
           <input
             type="text"
@@ -68,7 +66,9 @@ const Login = (props) => {
             onChange={(e) => setpassword(e.target.value.trim())}
           />
         </div>
+
         <button>Login</button>
+        
       </form>
       <br />
       <p>-- or --</p>

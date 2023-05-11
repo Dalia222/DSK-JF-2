@@ -60,7 +60,7 @@ const instructor = async (req, res) => {
         password: hashedPassword,
       });
       newInstructor.save();
-      res.send({ user: newInstructor, msg: "User added" });
+      res.send({ user: newInstructor, msg: "Instructor added" });
     }
   } catch (err) {
     res.json({ msg: "DATABASE ERROR" });

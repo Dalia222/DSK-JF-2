@@ -1,6 +1,8 @@
 const studentModel = require("../models/student");
 const instructorModel = require("../models/instructor");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -14,17 +16,16 @@ const register = async (req, res) => {
     } else {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
-
       const newStudent = new studentModel({
         username,
         email,
         password: hashedPassword,
       });
       newStudent.save();
-      res.send({ user: newStudent, msg: "User added" });
+      res.send({ msg: "Student added" });
     }
   } catch (err) {
-    res.json({ msg: "DATABASE ERROR" });
+    res.json({ msg: "ERROR" });
   }
 };
 
@@ -33,20 +34,15 @@ const login = async (req, res) => {
   try {
     const checkAsStudent = await studentModel.findOne({ email }); //if found return the object if not return null
     const checkAsInstructor = await instructorModel.findOne({ email }); //if found return the object if not return null
-    // console.log(checkAsStudent);
-    // console.log(checkAsInstructor);
-
     if (checkAsStudent) {
-      if (await bcrypt.compare(password, checkAsStudent.password))
+      if (await bcrypt.compare(password, checkAsStudent.password)) {
         res.send({
-          user: checkAsStudent,
           msg: "Logged in successfully",
           student: true,
         });
-      else res.send({ msg: "Wrong password" });
+      } else res.send({ msg: "Wrong password" });
     } else {
       if (checkAsInstructor) {
-        console.log("xxxxxxxxxxxxxxxx");
         if (await bcrypt.compare(password, checkAsInstructor.password))
           res.send({
             user: checkAsInstructor,
@@ -59,7 +55,7 @@ const login = async (req, res) => {
       }
     }
   } catch (err) {
-    res.json("DATABASE ERROR");
+    res.json("ERROR");
   }
 };
 

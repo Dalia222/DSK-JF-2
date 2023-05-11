@@ -5,15 +5,18 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const registrationRouter = require("./routers/registration") ;
 const adminRouter = require("./routers/admin");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(cookieParser());
+
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Server is running");
 });
 
 app.use(registrationRouter);
