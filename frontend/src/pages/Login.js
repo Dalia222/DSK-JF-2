@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import formValidation from "../helper/formValidation";
 import Cookies from "js-cookie";
+import styles from "../assets/style/SignUp.module.css";
+import avatar from "../assets/images/profile.png";
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
@@ -51,34 +53,74 @@ const Login = () => {
 
   return (
     <main>
-      <h1>Log in</h1>
-      <p style={{ color: "red" }} id="error"></p>
-      <form onSubmit={handleSubmit} id="form">
-        <div>
-          <input
-            type="text"
-            name="email"
-            id="emailField"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value.toLowerCase().trim())}
-          />
-        </div>
+      <div className="container" style={{ display: "flex" }}>
+        <div className={styles.flex}>
+          <div
+            className={styles.glass}
+            style={{ width: "100%", margin: "10% 0 0 110% " }}
+          >
+            <div className={styles.title}>
+              <h4>Hello Again!</h4>
+              <span className={styles.message}>
+                Explore More by connecting with us.
+              </span>
+            </div>
+            <form onSubmit={handleSubmit} id="form">
+              <div className={styles.profile}>
+                <img src={avatar} className={styles.profile_img} alt="avatar" />
+              </div>
+              <div className={styles.textboxContainer}>
+                <div>
+                  <input
+                    className={styles.textbox}
+                    type="text"
+                    name="email"
+                    id="emailField"
+                    placeholder="Email*"
+                    onChange={(e) =>
+                      setEmail(e.target.value.toLowerCase().trim())
+                    }
+                  />
+                </div>
 
-        <div>
-          <input
-            type="password"
-            name="password"
-            id="passwordField"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value.trim())}
-          />
-        </div>
+                <div>
+                  <input
+                    className={styles.textbox}
+                    type="password"
+                    name="password"
+                    id="passwordField"
+                    placeholder="Password*"
+                    onChange={(e) => setPassword(e.target.value.trim())}
+                  />
+                </div>
 
-        <button type="submit">Login</button>
-      </form>
-      <br />
-      <p>-- or --</p>
-      <Link to="/signup">Sign Up</Link>
+                <button className={styles.btn} onClick={handleSubmit}>
+                  Submit
+                </button>
+                <p
+                  className={styles.errors}
+                  style={{ color: "red" }}
+                  id="error"
+                ></p>
+              </div>
+              <div style={{ textAlign: "center", padding: "5px 0" }}>
+                <span style={{ color: "rgb(107 114 128)" }}>
+                  {" "}
+                  Not a Member?
+                  <Link
+                    className="text-red-500"
+                    to="./signup"
+                    style={{ color: "rgb(239 68 68)", textDecoration: "none" }}
+                  >
+                    {" "}
+                    Register Now{" "}
+                  </Link>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </main>
   );
 };
