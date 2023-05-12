@@ -147,8 +147,7 @@ const SignUp = () => {
                     className="text-red-500"
                     to="../"
                     style={{ color: "rgb(239 68 68)", textDecoration: "none" }}
-                  >
-                    Login Now
+                  > Login Now
                   </Link>
                 </span>
               </div>
